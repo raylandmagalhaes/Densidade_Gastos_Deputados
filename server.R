@@ -13,7 +13,7 @@ function(input, output, session) {
       pull()
     
     dadosx <- gastos %>% 
-      mutate(sem="AAA Completo") %>% 
+      mutate(sem="DENSIDADE COMPLETA") %>% 
       select(-cnpj_cpf,-supplier)
     
     for(i in fornecedores){
@@ -35,9 +35,25 @@ function(input, output, session) {
   output$densidades=renderPlotly({
     ggplotly(ggplot(data=dados(),aes(total_net_value))+
                geom_density(aes(colour=sem))+
-               theme(legend.position = "none") )
+               theme_bw()
+             # +
+             #   theme(legend.position = "none")
+             )
   })
   
+  datasetInput <- reactive({
+    
+    camara %>%
+      filter(congressperson_name==input$parl,subquota_description==input$tipo) %>% 
+      select(Valor_Reembolsado=total_net_value,Tipo_de_gasto=subquota_description,Fornecedor=supplier,cnpj_cpf,Data=issue_date) %>% 
+      datatable()
 
+  })
+  
+  output$tabela <- renderDT(
+    datasetInput(), # data
+    class = "display nowrap compact", # style
+    filter = "top"
+    )
   
 }

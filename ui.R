@@ -21,7 +21,10 @@ dashboardPage(
                             background = "light-blue",
                             selectInput("tipo",label = NULL, choices =unique(as.character(camara$subquota_description),selected=sample(unique(as.character(camara$subquota_description)),1))),
                             box(status = "warning",title="Distribuição de gastos ao se remover determinada empresa",width = 12,
-                                plotlyOutput('densidades'))
+                                plotlyOutput('densidades')),
+                            box( width = 12, status = "warning",
+                                 DTOutput('tabela'),
+                                 tags$head(tags$style("#tabela table {color:black;font-weight:bold; }", media="screen", type="text/css")))
                             
                         )
                         
